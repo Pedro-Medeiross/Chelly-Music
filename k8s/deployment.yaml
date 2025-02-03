@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  namespace: my-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app
+        image: my-app:$CI_COMMIT_SHA
+        env:
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: my-app-secrets
+                key: token
+          - name: PREFIX
+            valueFrom:
+              secretKeyRef:
+                name: my-app-secrets
+                key: prefix
+        ports:
+        - containerPort: 80
