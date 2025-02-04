@@ -15,13 +15,13 @@ before_script:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - mv ./kubectl /usr/local/bin/kubectl
-  
-  # Configuração do Kubernetes
+
+  # Configuração do Kubernetes a partir da variável KUBECONFIG_CONTENT
+  - echo "$KUBECONFIG_CONTENT" > /root/.kube/config
   - export KUBECONFIG=/root/.kube/config
-  - kubectl config use-context kubernetes-admin@kubernetes  # Use o contexto kubernetes-admin
-  - kubectl config set-credentials kubernetes-admin --token=$(cat /root/.kube/token)  # Define as credenciais do kubernetes-admin
-  - kubectl config set-context kubernetes-admin --cluster=kubernetes --user=kubernetes-admin  # Ajusta o contexto para kubernetes-admin
-  - kubectl config use-context kubernetes-admin  # Certifique-se de usar o contexto correto
+  - kubectl config use-context kubernetes-admin@kubernetes
+  - kubectl config set-context kubernetes-admin --cluster=kubernetes --user=kubernetes-admin
+  - kubectl config use-context kubernetes-admin
 
 stages:
   - build
