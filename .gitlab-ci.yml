@@ -37,6 +37,8 @@ stages:
 build:
   stage: build
   script:
+    - echo "Checking Docker status..."
+    - docker info  # Verifica se o Docker está funcionando corretamente
     - echo "Building the Docker image..."
     - docker build -t my-app:$CI_COMMIT_SHA .
 
