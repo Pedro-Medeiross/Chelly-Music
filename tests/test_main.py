@@ -20,7 +20,7 @@ def test_load_all(mocker):
     client.load_extension.assert_called_with('modules..test_module')
 
 def test_bot_initialization():
-    assert client.command_prefix == os.environ.get('prefix')
+    assert client.command_prefix == os.environ.get('PREFIX_BOT')
     assert isinstance(client, commands.AutoShardedBot)
     assert client.shard_count == 2
     assert client.help_command is None

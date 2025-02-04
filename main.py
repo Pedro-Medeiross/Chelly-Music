@@ -10,7 +10,7 @@ load_dotenv()
 intents = disnake.Intents.all()
 
 # Cria uma instância do AutoShardedBot com os prefixos e intents definidos
-client = commands.AutoShardedBot(command_prefix=os.environ.get('prefix'), intents=intents, shard_ids=[0, 1],
+client = commands.AutoShardedBot(command_prefix=os.environ.get('PREFIX_BOT'), intents=intents, shard_ids=[0, 1],
                                  shard_count=2, help_command=None)
 
 def load_all():
@@ -29,4 +29,4 @@ def load_all():
 load_all()
 
 # Inicia o bot com o token definido nas variáveis de ambiente
-client.run(os.environ.get('token'))
+client.run(os.environ.get('TOKEN_BOT'))
