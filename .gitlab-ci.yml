@@ -1,7 +1,7 @@
 image: docker:latest
 
 variables:
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
   KUBERNETES_MASTER: "https://192.168.101.17:6443"
@@ -9,7 +9,7 @@ variables:
 
 services:
   - name: docker:dind
-    command: ["--tls=false"]
+    command: ["--host=tcp://0.0.0.0:2375", "--tls=false"]
 
 before_script:
   # Instalar kubectl
