@@ -9,7 +9,10 @@ services:
   - docker:dind
 
 before_script:
-  - export KUBECONFIG=/root/.kube/config
+  - echo "$K8S_TOKEN" > /root/.kube/token
+  - kubectl config set-credentials gitlab-runner --token=$(cat /root/.kube/token)
+  - kubectl config set-context gitlab-runner --cluster=k8s-cluster --user=gitlab-runner
+  - kubectl config use-context gitlab-runner
 
 stages:
   - build
