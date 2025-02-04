@@ -41,24 +41,36 @@ stages:
 build:
   stage: build
   script:
-    - echo "Checking Docker status..."
-    - docker info  # Verifica se o Docker está funcionando corretamente
+    - echo "Logging into GitLab Container Registry..."
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
     - echo "Building the Docker image..."
-    - docker build -t my-app:$CI_COMMIT_SHA .
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    
+    - echo "Pushing the Docker image to GitLab Registry..."
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 # Stage de Testes
 test:
   stage: test
   script:
+    - echo "Logging into GitLab Container Registry..."
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+    - echo "Pulling the Docker image for testing..."
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
     - echo "Running tests..."
-    - docker run -e TOKEN=$TOKEN -e PREFIX=$PREFIX my-app:$CI_COMMIT_SHA pytest
+    - docker run -e TOKEN=$TOKEN -e PREFIX=$PREFIX $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA pytest
 
 # Stage de Deploy
 deploy:
   stage: deploy
   script:
-    - echo "Deploying to Kubernetes..."
-    - kubectl apply -f k8s/deployment.yaml --namespace=my-app
+    - echo "Updating Kubernetes Deployment..."
+    
+    # Substituir a imagem no Deployment
+    - kubectl set image deployment my-app my-app=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --namespace=my-app
   environment:
     name: production
   only:
