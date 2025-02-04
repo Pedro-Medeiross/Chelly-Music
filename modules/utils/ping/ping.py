@@ -15,7 +15,9 @@ class Ping(commands.Cog):
         """Return bot latency"""
         await ctx.message.delete()
         
-        r = await ctx.send(f"O ping é {main.client.latency * 1000:.2f}ms")
+        r = await ctx.send("A Faith está executando o comando")
+        
+        await r.edit(f"O ping é {main.client.latency * 1000:.2f}ms")
         await asyncio.sleep(7)
         await r.delete()
         
