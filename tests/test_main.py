@@ -1,5 +1,10 @@
+import sys
 import os
-import pytest
+
+# Adiciona o diretório raiz do projeto ao sys.path para garantir que o Python o encontre
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+import os
 from disnake.ext import commands
 from main import client, load_all
 
