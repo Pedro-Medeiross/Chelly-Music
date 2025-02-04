@@ -34,7 +34,7 @@ deploy:
   environment:
     name: production
   only:
-    - master
+    - main
 
 # Cache e Artefatos
 cache:

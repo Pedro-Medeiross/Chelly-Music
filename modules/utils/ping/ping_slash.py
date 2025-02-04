@@ -14,7 +14,7 @@ class PingSlash(commands.Cog):
 
         await inter.response.defer()
 
-        r = await inter.response.send_message(f"O ping é {main.client.latency * 1000:.2f}ms")
+        r = await inter.edit_original_response(f"O ping é {main.client.latency * 1000:.2f}ms")
         await asyncio.sleep(7)
         await r.delete
         
