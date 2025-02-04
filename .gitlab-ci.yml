@@ -9,7 +9,8 @@ variables:
 
 services:
   - name: docker:dind
-    command: ["--host=tcp://0.0.0.0:2375", "--tls=false"]
+    entrypoint: ["dockerd-entrypoint.sh"]
+    command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
 
 before_script:
   # Instalar kubectl
@@ -27,6 +28,10 @@ before_script:
   - kubectl config use-context kubernetes-admin@kubernetes
   - kubectl config set-context kubernetes-admin --cluster=kubernetes --user=kubernetes-admin
   - kubectl config use-context kubernetes-admin
+
+  # Verificar o status do Docker daemon
+  - echo "Checking Docker status..."
+  - docker info
 
 stages:
   - build
