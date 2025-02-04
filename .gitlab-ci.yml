@@ -59,8 +59,6 @@ test:
     - export PREFIX_BOT=$PREFIX_BOT
     - echo "TOKEN_BOT = ${TOKEN_BOT}"
     - echo "PREFIX_BOT =  ${PREFIX_BOT}"
-    - python -c "import os; print(f'TOKEN_BOT:{os.getenv('TOKEN_BOT')}')"
-    - python -c "import os; print(f'PREFIX_BOT:{os.getenv('PREFIX_BOT')}')"
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"  # Login no Docker Hub
     - docker pull $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Pull da imagem do Docker Hub
     - docker run -e TOKEN=$TOKEN_BOT -e PREFIX=$PREFIX_BOT $DOCKER_USER/my-app:$CI_COMMIT_SHA pytest  # Executa os testes
