@@ -3,16 +3,13 @@ image: docker:latest
 variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
-  KUBERNETES_MASTER: "$KUBERNETES_MASTER"
-  KUBECONFIG_CONTENT: "$KUBECONFIG_CONTENT"
+  KUBERNETES_MASTER: "https://192.168.101.17:6443"
 
 services:
   - docker:dind
 
 before_script:
-  - mkdir -p ~/.kube
-  - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
-  - export KUBECONFIG=~/.kube/config
+  - export KUBECONFIG=/root/.kube/config
 
 stages:
   - build
