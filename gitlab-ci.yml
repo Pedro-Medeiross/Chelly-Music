@@ -1,3 +1,11 @@
+variables:
+  KUBERNETES_MASTER: "$KUBERNETES_MASTER"
+  KUBECONFIG_CONTENT: "$KUBECONFIG"
+
+before_script:
+  - mkdir -p ~/.kube
+  - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+
 stages:
   - build
   - test
@@ -26,7 +34,7 @@ deploy:
   environment:
     name: production
   only:
-    - main
+    - master
 
 # Cache e Artefatos
 cache:
