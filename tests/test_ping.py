@@ -2,7 +2,7 @@ import pytest
 import disnake
 from disnake.ext import commands
 from disnake.ext.commands import Bot
-from ping import Ping
+from modules.utils.ping.ping import Ping
 
 @pytest.fixture
 def bot():
@@ -12,8 +12,8 @@ def bot():
     return bot
 
 @pytest.mark.asyncio
-async def test_ping_command(bot, mocker):
-    # Create a mock context
+async def test_ping_command_prefix(bot, mocker):
+    # Create a mock context for the prefix command
     ctx = mocker.Mock()
     ctx.message.delete = mocker.AsyncMock()
     ctx.send = mocker.AsyncMock(return_value=mocker.Mock(delete=mocker.AsyncMock()))
@@ -21,7 +21,7 @@ async def test_ping_command(bot, mocker):
     # Mock latency
     bot.latency = 0.1234
     
-    # Invoke the command
+    # Invoke the command using prefix
     await bot.get_command('ping').callback(ctx)
     
     # Assert message deleted
@@ -33,3 +33,24 @@ async def test_ping_command(bot, mocker):
     # Assert response message deleted
     sent_message = await ctx.send()
     sent_message.delete.assert_called_once()
+
+@pytest.mark.asyncio
+async def test_ping_command_slash(bot, mocker):
+    # Create a mock context for the slash command
+    ctx = mocker.Mock()
+    ctx.send = mocker.AsyncMock(return_value=mocker.Mock(delete=mocker.AsyncMock()))
+    
+    # Mock latency
+    bot.latency = 0.1234
+
+    # Invoke the command using slash
+    slash_command = bot.get_cog('Ping').get_slash_command('ping')  # Get the slash command object
+    await slash_command.callback(ctx)
+    
+    # Assert ping response sent
+    ctx.send.assert_called_once_with(f"O ping é {bot.latency * 1000:.2f}ms")
+    
+    # Assert response message deleted
+    sent_message = await ctx.send()
+    sent_message.delete.assert_called_once()
+    
