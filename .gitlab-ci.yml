@@ -4,14 +4,15 @@ variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
   KUBERNETES_MASTER: "$KUBERNETES_MASTER"
+  KUBECONFIG_CONTENT: "$KUBECONFIG_CONTENT"
 
 services:
   - docker:dind
 
 before_script:
-  # Monta o ConfigMap no volume correto
   - mkdir -p ~/.kube
-  - kubectl get configmap kubeconfig -o jsonpath='{.data.config}' > ~/.kube/config
+  - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+  - export KUBECONFIG=~/.kube/config
 
 stages:
   - build
