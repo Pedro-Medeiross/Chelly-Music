@@ -16,6 +16,9 @@ before_script:
   - chmod +x ./kubectl
   - mv ./kubectl /usr/local/bin/kubectl
 
+  # Certifique-se de que o diretório /root/.kube exista
+  - mkdir -p /root/.kube
+
   # Configuração do Kubernetes a partir da variável KUBECONFIG_CONTENT
   - echo "$KUBECONFIG_CONTENT" > /root/.kube/config
   - export KUBECONFIG=/root/.kube/config
