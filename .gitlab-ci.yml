@@ -12,6 +12,7 @@ services:
 before_script:
   - mkdir -p ~/.kube
   - echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+  - export KUBECONFIG=~/.kube/config
 
 stages:
   - build
