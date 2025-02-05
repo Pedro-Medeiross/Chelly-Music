@@ -4,10 +4,10 @@ metadata:
   name: my-app-service
   namespace: my-app
 spec:
-  type: LoadBalancer
+  type: ClusterIP  # Altere para LoadBalancer se precisar expor o bot externamente
   selector:
     app: my-app
   ports:
     - protocol: TCP
-      port: 80
+      port: 80  # Pode ser removido se não for necessário expor a porta
       targetPort: 80

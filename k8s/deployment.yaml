@@ -4,7 +4,7 @@ metadata:
   name: my-app
   namespace: my-app
 spec:
-  replicas: 3
+  replicas: 3  # Você pode ajustar conforme necessário para o número de shards
   selector:
     matchLabels:
       app: my-app
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: my-app:$CI_COMMIT_SHA
+        image: my-app:$CI_COMMIT_SHA  # Certifique-se de que a imagem está sendo construída corretamente
         env:
           - name: TOKEN
             valueFrom:
@@ -28,4 +28,4 @@ spec:
                 name: my-app-secrets
                 key: prefix
         ports:
-        - containerPort: 80
+        - containerPort: 80  # Se for realmente necessário expor alguma porta
