@@ -8,8 +8,8 @@ class TestLoadAll(unittest.TestCase):
     def test_load_all(self, mock_load_extension, mock_os_walk):
         # Simulando estrutura de arquivos na pasta "modules"
         mock_os_walk.return_value = [
-            ("./modules", ["subdir"], ["file1.py", "file2.py"]),
-            ("./modules/subdir", [], ["file3.py"]),
+            ("./Cogs", ["subdir"], ["file1.py", "file2.py"]),
+            ("./Cogs/subdir", [], ["file3.py"]),
         ]
 
         # Criando um bot mockado da própria classe AutoShardedBot
@@ -23,16 +23,16 @@ class TestLoadAll(unittest.TestCase):
                     if filename.endswith('.py'):
                         module = os.path.relpath(os.path.join(root, filename), directory)
                         module = module.replace(os.sep, ".")[:-3]  # Remove .py no final
-                        bot_instance.load_extension(f'modules.{module}')
+                        bot_instance.load_extension(f'Cogs.{module}')
 
         # Chamando a função com o mock_bot correto
-        recursive_load('./modules', mock_bot)
+        recursive_load('./Cogs', mock_bot)
 
         # Verifica se os arquivos certos foram carregados
         expected_calls = [
-            "modules.file1",
-            "modules.file2",
-            "modules.subdir.file3",
+            "Cogs.file1",
+            "Cogs.file2",
+            "Cogs.subdir.file3",
         ]
         actual_calls = [call.args[0] for call in mock_bot.load_extension.call_args_list]
 

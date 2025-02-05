@@ -20,7 +20,7 @@ def load_all():
             for filename in files:
                 if filename.endswith('.py'):
                     module = os.path.relpath(root, directory).replace(os.sep, '.')
-                    client.load_extension(f'modules.{module}.{filename[:-3]}')
+                    client.load_extension(f'Cogs.{module}.{filename[:-3]}')
 
     # Chama a função recursiva a partir do diretório 'modulos'
     recursive_load('./Cogs')
