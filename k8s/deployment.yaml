@@ -16,6 +16,7 @@ spec:
       containers:
       - name: discord-bot
         image: $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Usando a variável de commit SHA
+        imagePullPolicy: Always  # Garante que a imagem mais recente será puxada
         env:
         - name: TOKEN_BOT
           valueFrom:
