@@ -1,29 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  name: discord-bot
   namespace: my-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: my-app
+      app: discord-bot
   template:
     metadata:
       labels:
-        app: my-app
+        app: discord-bot
     spec:
       containers:
-      - name: my-app
-        image: medero/my-app:$CI_COMMIT_SHA  # Variável será substituída no CI/CD
+      - name: discord-bot
+        image: $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Usando a variável de commit SHA
         env:
         - name: TOKEN_BOT
           valueFrom:
             secretKeyRef:
-              name: my-app-secrets
+              name: discord-bot-secrets
               key: TOKEN_BOT
         - name: PREFIX_BOT
           valueFrom:
             secretKeyRef:
-              name: my-app-secrets
+              name: discord-bot-secrets
               key: PREFIX_BOT
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+      imagePullSecrets:
+      - name: regcred
