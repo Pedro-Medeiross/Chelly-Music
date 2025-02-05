@@ -67,12 +67,10 @@ test:
 deploy:
   stage: deploy
   script:
-    - kubectl config set-cluster my-cluster --server=$K8S_SERVER
-    - kubectl config set-credentials deployer --token=$K8S_TOKEN
-    - kubectl config set-context my-cluster --cluster=my-cluster --user=deployer
-    - kubectl config use-context my-cluster
-    - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml
-    - kubectl apply -f k8s/deployment.yaml --namespace=my-app
+  - kubectl config use-context kubernetes-admin@kubernetes
+  - echo "K8S_TOKEN is set? " $(if [[ -z "$K8S_TOKEN" ]]; then echo "NO"; else echo "YES"; fi)
+  - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml
+  - kubectl apply -f k8s/deployment.yaml --namespace=my-app
   only:
     - main
     
