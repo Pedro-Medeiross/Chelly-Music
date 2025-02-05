@@ -4,7 +4,7 @@ metadata:
   name: my-app
   namespace: my-app
 spec:
-  replicas: 3  # Você pode ajustar conforme necessário para o número de shards
+  replicas: 3
   selector:
     matchLabels:
       app: my-app
@@ -15,11 +15,11 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: medero/my-app:c6559ffd3abe41062e0ac042220a6d50893fd37b
+        image: medero/my-app:$CI_COMMIT_SHA  # Variável será substituída no CI/CD
         env:
           - name: TOKEN
-            value: "$TOKEN_BOT"  # Usa a variável do CI/CD diretamente
+            value: "$TOKEN_BOT"
           - name: PREFIX
-            value: "$PREFIX_BOT"  # Usa a variável do CI/CD diretamente
+            value: "$PREFIX_BOT"
         ports:
-          - containerPort: 80  # Se for realmente necessário expor alguma porta
+          - containerPort: 80

@@ -67,15 +67,15 @@ test:
 deploy:
   stage: deploy
   script:
-    - echo "Deploying to Kubernetes..."
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"  # Login no Docker Hub
-    - docker pull $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Pull da imagem do Docker Hub
-    - kubectl apply -f k8s/deployment.yaml --namespace=my-app  # Deploy no Kubernetes
-  environment:
-    name: production
+    - kubectl config set-cluster my-cluster --server=$K8S_SERVER
+    - kubectl config set-credentials deployer --token=$K8S_TOKEN
+    - kubectl config set-context my-cluster --cluster=my-cluster --user=deployer
+    - kubectl config use-context my-cluster
+    - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml
+    - kubectl apply -f k8s/deployment.yaml --namespace=my-app
   only:
     - main
-
+    
 # Cache e Artefatos
 cache:
   paths:
