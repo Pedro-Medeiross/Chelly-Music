@@ -17,9 +17,13 @@ spec:
       - name: my-app
         image: medero/my-app:$CI_COMMIT_SHA  # Variável será substituída no CI/CD
         env:
-          - name: TOKEN
-            value: "$TOKEN_BOT"
-          - name: PREFIX
-            value: "$PREFIX_BOT"
-        ports:
-          - containerPort: 80
+        - name: TOKEN_BOT
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: TOKEN_BOT
+        - name: PREFIX_BOT
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: PREFIX_BOT
