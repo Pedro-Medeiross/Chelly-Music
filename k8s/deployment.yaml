@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: my-app:$CI_COMMIT_SHA  # Certifique-se de que a imagem está sendo construída corretamente
+        image: medero/my-app:c6559ffd3abe41062e0ac042220a6d50893fd37b
         env:
           - name: TOKEN
             value: "$TOKEN_BOT"  # Usa a variável do CI/CD diretamente
