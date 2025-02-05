@@ -6,7 +6,7 @@ class TestLoadAll(unittest.TestCase):
     @patch("os.walk")
     @patch("disnake.ext.commands.AutoShardedBot.load_extension")
     def test_load_all(self, mock_load_extension, mock_os_walk):
-        # Simulando estrutura de arquivos na pasta "modules"
+        # Simulando estrutura de arquivos na pasta "Cogs"
         mock_os_walk.return_value = [
             ("./Cogs", ["subdir"], ["file1.py", "file2.py"]),
             ("./Cogs/subdir", [], ["file3.py"]),

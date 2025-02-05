@@ -22,7 +22,7 @@ def load_all():
                     module = os.path.relpath(root, directory).replace(os.sep, '.')
                     client.load_extension(f'Cogs.{module}.{filename[:-3]}')
 
-    # Chama a função recursiva a partir do diretório 'modulos'
+    # Chama a função recursiva a partir do diretório 'Cogs'
     recursive_load('./Cogs')
 
 # Carrega todas as extensões
