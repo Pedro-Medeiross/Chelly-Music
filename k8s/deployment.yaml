@@ -18,14 +18,8 @@ spec:
         image: my-app:$CI_COMMIT_SHA  # Certifique-se de que a imagem está sendo construída corretamente
         env:
           - name: TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: my-app-secrets
-                key: token
+            value: "$TOKEN_BOT"  # Usa a variável do CI/CD diretamente
           - name: PREFIX
-            valueFrom:
-              secretKeyRef:
-                name: my-app-secrets
-                key: prefix
+            value: "$PREFIX_BOT"  # Usa a variável do CI/CD diretamente
         ports:
-        - containerPort: 80  # Se for realmente necessário expor alguma porta
+          - containerPort: 80  # Se for realmente necessário expor alguma porta
