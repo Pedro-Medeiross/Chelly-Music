@@ -17,17 +17,13 @@ spec:
       - name: discord-bot
         image: $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Usando a variável de commit SHA
         imagePullPolicy: Always  # Garante que a imagem mais recente será puxada
-        env:
-        - name: TOKEN_BOT
-          valueFrom:
-            secretKeyRef:
-              name: discord-bot-secrets
-              key: TOKEN_BOT
-        - name: PREFIX_BOT
-          valueFrom:
-            secretKeyRef:
-              name: discord-bot-secrets
-              key: PREFIX_BOT
+        envFrom:
+        - configMapRef:
+            name: discord-bot-env
+        volumeMounts:
+        - name: env-volume
+          mountPath: /app/.env
+          subPath: .env
         resources:
           requests:
             memory: "512Mi"
@@ -35,5 +31,14 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "1"
+      volumes:
+      - name: env-volume
+        configMap:
+          name: discord-bot-env
+          items:
+          - key: TOKEN_BOT
+            path: .env
+          - key: PREFIX_BOT
+            path: .env
       imagePullSecrets:
       - name: regcred
