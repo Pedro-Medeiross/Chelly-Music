@@ -12,23 +12,16 @@ services:
     command: ["--host=tcp://0.0.0.0:2375", "--tls=false"]
 
 before_script:
-  # Instalar kubectl
   - apk update && apk add --no-cache curl bash
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - mv ./kubectl /usr/local/bin/kubectl
-
-  # Certifique-se de que o diretório /root/.kube exista
   - mkdir -p /root/.kube
-
-  # Configuração do Kubernetes a partir da variável KUBECONFIG_CONTENT
   - echo "$KUBECONFIG_CONTENT" > /root/.kube/config
   - export KUBECONFIG=/root/.kube/config
   - kubectl config use-context kubernetes-admin@kubernetes
   - kubectl config set-context kubernetes-admin --cluster=kubernetes --user=kubernetes-admin
   - kubectl config use-context kubernetes-admin
-
-  # Verificar o status do Docker daemon
   - echo "Checking Docker status..."
   - docker info
 
@@ -37,44 +30,35 @@ stages:
   - test
   - deploy
 
-# Stage de Build
 build:
   stage: build
   script:
-    - echo "Checking Docker status..."
-    - docker info  # Verifica se o Docker está funcionando corretamente
-    - echo "Building the Docker image..."
+    - docker info
     - docker build -t my-app:$CI_COMMIT_SHA .
-    - echo "Pushing Docker image to Docker Hub..."
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"  # Login no Docker Hub
-    - docker tag my-app:$CI_COMMIT_SHA $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Tag da imagem
-    - docker push $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Push da imagem
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+    - docker tag my-app:$CI_COMMIT_SHA $DOCKER_USER/my-app:$CI_COMMIT_SHA
+    - docker push $DOCKER_USER/my-app:$CI_COMMIT_SHA
 
-# Stage de Testes
 test:
   stage: test
   script:
-    - echo "Running tests..."
     - export TOKEN_BOT=$TOKEN_BOT
     - export PREFIX_BOT=$PREFIX_BOT
-    - echo "TOKEN_BOT = ${TOKEN_BOT}"
-    - echo "PREFIX_BOT =  ${PREFIX_BOT}"
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"  # Login no Docker Hub
-    - docker pull $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Pull da imagem do Docker Hub
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+    - docker pull $DOCKER_USER/my-app:$CI_COMMIT_SHA
     - docker run -e TOKEN_BOT=$TOKEN_BOT -e PREFIX_BOT=$PREFIX_BOT $DOCKER_USER/my-app:$CI_COMMIT_SHA pytest
 
-# Stage de Deploy
 deploy:
   stage: deploy
   script:
-  - kubectl config use-context kubernetes-admin@kubernetes
-  - echo "K8S_TOKEN is set? " $(if [[ -z "$K8S_TOKEN" ]]; then echo "NO"; else echo "YES"; fi)
-  - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml
-  - kubectl apply -f k8s/deployment.yaml --namespace=my-app
+    - kubectl config use-context kubernetes-admin@kubernetes
+    - echo "K8S_TOKEN is set? " $(if [[ -z "$K8S_TOKEN" ]]; then echo "NO"; else echo "YES"; fi)
+    - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml  # Substitui a variável de commit SHA
+    - cat k8s/deployment.yaml  # Adiciona este comando para verificar a substituição
+    - kubectl apply -f k8s/deployment.yaml --namespace=my-app
   only:
     - main
-    
-# Cache e Artefatos
+
 cache:
   paths:
     - .cache/pip
