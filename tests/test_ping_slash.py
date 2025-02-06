@@ -9,7 +9,7 @@ load_dotenv()
 @pytest.mark.asyncio
 async def test_ping_command():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=True)
         context = await browser.new_context()
 
         # Buscar as variáveis de ambiente
