@@ -28,6 +28,16 @@ spec:
             secretKeyRef:
               name: discord-bot-secrets
               key: PREFIX_BOT
+        - name: DISCORD_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: discord-credentials
+              key: email
+        - name: DISCORD_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: discord-credentials
+              key: password
         resources:
           requests:
             memory: "512Mi"
