@@ -16,6 +16,10 @@ async def test_ping_command():
         discord_email = os.getenv("DISCORD_EMAIL")
         discord_password = os.getenv("DISCORD_PASSWORD")
         discord_channel_url = "https://discord.com/channels/1081985248969105558/1081985250923651229"
+        # Adicionar logs de depuração
+        print(f"DISCORD_EMAIL: {discord_email}")
+        print(f"DISCORD_PASSWORD: {discord_password}")
+        print(f"DISCORD_CHANNEL_URL: {discord_channel_url}")
 
         if not discord_email or not discord_password or not discord_channel_url:
             raise ValueError("Variáveis de ambiente não definidas. Verifique as variáveis DISCORD_EMAIL, DISCORD_PASSWORD e DISCORD_CHANNEL_URL.")
