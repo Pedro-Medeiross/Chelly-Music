@@ -44,9 +44,11 @@ test:
   script:
     - export TOKEN_BOT=$TOKEN_BOT
     - export PREFIX_BOT=$PREFIX_BOT
+    - export DISCORD_EMAIL=$DISCORD_EMAIL
+    - export DISCORD_PASSWORD=$DISCORD_PASSWORD
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
     - docker pull $DOCKER_USER/my-app:$CI_COMMIT_SHA
-    - docker run -e TOKEN_BOT=$TOKEN_BOT -e PREFIX_BOT=$PREFIX_BOT $DOCKER_USER/my-app:$CI_COMMIT_SHA pytest
+    - docker run -e TOKEN_BOT=$TOKEN_BOT -e PREFIX_BOT=$PREFIX_BOT -e DISCORD_EMAIL=$DISCORD_EMAIL -e DISCORD_PASSWORD=$DISCORD_PASSWORD $DOCKER_USER/my-app:$CI_COMMIT_SHA pytest
 
 deploy:
   stage: deploy
