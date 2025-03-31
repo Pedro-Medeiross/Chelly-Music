@@ -1,3 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: discord-bot-secrets
+  namespace: my-app
+type: Opaque
+data:
+  TOKEN_BOT: <base64_encoded_token>
+  PREFIX_BOT: <base64_encoded_prefix>
+  DISCORD_EMAIL: <base64_encoded_email>
+  DISCORD_PASSWORD: <base64_encoded_password>
+  SPOTIFY_CLIENT_ID: <base64_encoded_spotify_client_id>
+  SPOTIFY_CLIENT_SECRET: <base64_encoded_spotify_client_secret>
+  GENIUS_ClientID: <base64_encoded_genius_client_id>
+  GENIUS_ClientSecret: <base64_encoded_genius_client_secret>
+  GENIUS_ACCESS_TOKEN: <base64_encoded_genius_access_token>
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,13 +48,38 @@ spec:
         - name: DISCORD_EMAIL
           valueFrom:
             secretKeyRef:
-              name: discord-credentials
-              key: email
+              name: discord-bot-secrets
+              key: DISCORD_EMAIL
         - name: DISCORD_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: discord-credentials
-              key: password
+              name: discord-bot-secrets
+              key: DISCORD_PASSWORD
+        - name: SPOTIFY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: SPOTIFY_CLIENT_ID
+        - name: SPOTIFY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: SPOTIFY_CLIENT_SECRET
+        - name: GENIUS_ClientID
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ClientID
+        - name: GENIUS_ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ClientSecret
+        - name: GENIUS_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ACCESS_TOKEN
         resources:
           requests:
             memory: "512Mi"
