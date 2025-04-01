@@ -13,6 +13,10 @@ spec:
       labels:
         app: discord-bot
     spec:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
       containers:
       - name: discord-bot
         image: $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Usando a variável de commit SHA
