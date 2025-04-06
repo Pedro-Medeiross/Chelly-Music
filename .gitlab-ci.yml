@@ -109,7 +109,6 @@ deploy:
         echo "📦 Aplicando $file";
         kubectl apply -f "$file";
       done
-
   only:
     - music
 
