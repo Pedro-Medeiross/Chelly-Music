@@ -53,30 +53,63 @@ test:
 deploy:
   stage: deploy
   script:
-    - echo "Branch atual: $CI_COMMIT_REF_NAME"
-    - echo "Arquivos disponíveis:"
-    - ls -la k8s || echo "Pasta k8s não encontrada"
+    # 🧰 Instala pacotes necessários
+    - apk update && apk add --no-cache curl bash
 
-    # Verifica se todos os arquivos de deployment existem
-    - for i in {1..5}; do
-        if [ ! -f "k8s/deployment$i.yaml" ]; then
-          echo "❌ Arquivo k8s/deployment$i.yaml não encontrado!";
-          exit 1;
-        fi
+    # 📥 Baixa o kubectl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+
+    # 🛠️ Configura o KUBECONFIG
+    - mkdir -p /root/.kube
+    - echo "$KUBECONFIG_CONTENT" > /root/.kube/config
+    - export KUBECONFIG=/root/.kube/config
+    - kubectl config use-context kubernetes-admin@kubernetes
+
+    # 🧪 DEBUG: Variáveis de ambiente
+    - echo "DEBUG: DOCKER_USER = $DOCKER_USER"
+    - echo "DEBUG: CI_COMMIT_SHA = $CI_COMMIT_SHA"
+
+    # 🧪 DEBUG: Arquivos disponíveis na pasta k8s/
+    - echo "DEBUG: Conteúdo da pasta k8s/"
+    - ls -la k8s || echo "⚠️ Pasta 'k8s' não encontrada!"
+
+    # 📄 Mostra os arquivos antes da substituição
+    - echo "DEBUG: Arquivos ANTES do sed"
+    - for file in k8s/*.yaml; do
+        echo "🟡 $file:";
+        cat "$file";
       done
 
-    # Substitui as variáveis nos arquivos
-    - for i in {1..5}; do
-        sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" k8s/deployment$i.yaml;
-        sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment$i.yaml;
+    # 🔧 Substitui variáveis nos YAMLs
+    - echo "Executando substituições com sed..."
+    - for file in k8s/*.yaml; do
+        echo "✏️ Atualizando $file";
+        sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" "$file";
+        sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" "$file";
       done
 
-    # Aplica todos os deployments
-    - for i in {1..5}; do
-        echo "🚀 Applying deployment$i.yaml...";
-        cat k8s/deployment$i.yaml;
-        kubectl apply -f k8s/deployment$i.yaml --namespace=my-app;
+    # 📄 Mostra os arquivos depois da substituição
+    - echo "DEBUG: Arquivos DEPOIS do sed"
+    - for file in k8s/*.yaml; do
+        echo "🟢 $file:";
+        cat "$file";
       done
+
+    # ✅ Valida os arquivos com --dry-run
+    - echo "🔍 Validando arquivos com dry-run..."
+    - for file in k8s/*.yaml; do
+        echo "🧪 Validando $file";
+        kubectl apply --dry-run=client -f "$file" || exit 1;
+      done
+
+    # 🚀 Aplica os arquivos de deployment
+    - echo "🚀 Aplicando arquivos no cluster..."
+    - for file in k8s/*.yaml; do
+        echo "📦 Aplicando $file";
+        kubectl apply -f "$file";
+      done
+
   only:
     - music
 
