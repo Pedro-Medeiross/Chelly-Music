@@ -60,7 +60,7 @@ deploy:
     - cat k8s/deployment.yaml  # Adiciona este comando para verificar a substituição
     - kubectl apply -f k8s/deployment.yaml --namespace=my-app
   only:
-    - main
+    - music
 
 cache:
   paths:
