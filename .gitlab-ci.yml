@@ -60,9 +60,9 @@ deploy:
     - echo "$KUBECONFIG_CONTENT" > /root/.kube/config
     - export KUBECONFIG=/root/.kube/config
     - kubectl config use-context kubernetes-admin@kubernetes
-    - echo "DEBUG: DOCKER_USER = $DOCKER_USER"
-    - echo "DEBUG: CI_COMMIT_SHA = $CI_COMMIT_SHA"
-    - echo "DEBUG: Conteúdo da pasta k8s/"
+    - echo "DEBUG:DOCKER_USER = $DOCKER_USER"
+    - echo "DEBUG:CI_COMMIT_SHA = $CI_COMMIT_SHA"
+    - echo "DEBUG:Conteúdo da pasta k8s/"
     - ls -la k8s || echo "⚠️ Pasta 'k8s' não encontrada!"
 
     - |
