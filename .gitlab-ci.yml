@@ -53,10 +53,19 @@ test:
 deploy:
   stage: deploy
   script:
-    - kubectl config use-context kubernetes-admin@kubernetes
-    - echo "K8S_TOKEN is set? " $(if [[ -z "$K8S_TOKEN" ]]; then echo "NO"; else echo "YES"; fi)
+    - echo "Branch atual: $CI_COMMIT_REF_NAME"
+    - echo "Arquivos disponíveis:"
+    - ls -la k8s || echo "Pasta k8s não encontrada"
 
-    # Substitui as variáveis nos arquivos de deployment 1 a 5
+    # Verifica se todos os arquivos de deployment existem
+    - for i in {1..5}; do
+        if [ ! -f "k8s/deployment$i.yaml" ]; then
+          echo "❌ Arquivo k8s/deployment$i.yaml não encontrado!";
+          exit 1;
+        fi
+      done
+
+    # Substitui as variáveis nos arquivos
     - for i in {1..5}; do
         sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" k8s/deployment$i.yaml;
         sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment$i.yaml;
@@ -64,7 +73,7 @@ deploy:
 
     # Aplica todos os deployments
     - for i in {1..5}; do
-        echo "Applying deployment$i.yaml";
+        echo "🚀 Applying deployment$i.yaml...";
         cat k8s/deployment$i.yaml;
         kubectl apply -f k8s/deployment$i.yaml --namespace=my-app;
       done
