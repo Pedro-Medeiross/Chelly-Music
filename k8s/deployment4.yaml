@@ -1,37 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: discord-bot
+  name: discord-bot-1
   namespace: my-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: discord-bot
+      app: discord-bot-1
   template:
     metadata:
       labels:
-        app: discord-bot
+        app: discord-bot-1
     spec:
-      tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
       containers:
       - name: discord-bot
-        image: $DOCKER_USER/my-app:$CI_COMMIT_SHA  # Usando a variável de commit SHA
+        image: $DOCKER_USER/my-app:$CI_COMMIT_SHA
         imagePullPolicy: Always
         env:
         - name: TOKEN_BOT
           valueFrom:
             secretKeyRef:
               name: discord-bot-secrets
-              key: TOKEN_BOT
+              key: TOKEN_BOT_4
         - name: PREFIX_BOT
           valueFrom:
             secretKeyRef:
               name: discord-bot-secrets
-              key: PREFIX_BOT
+              key: PREFIX_BOT_4
         - name: DISCORD_EMAIL
           valueFrom:
             secretKeyRef:

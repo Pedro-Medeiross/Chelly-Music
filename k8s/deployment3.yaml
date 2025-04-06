@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discord-bot-1
+  namespace: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discord-bot-1
+  template:
+    metadata:
+      labels:
+        app: discord-bot-1
+    spec:
+      containers:
+      - name: discord-bot
+        image: $DOCKER_USER/my-app:$CI_COMMIT_SHA
+        imagePullPolicy: Always
+        env:
+        - name: TOKEN_BOT
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: TOKEN_BOT_3
+        - name: PREFIX_BOT
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: PREFIX_BOT_3
+        - name: DISCORD_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: DISCORD_EMAIL
+        - name: DISCORD_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: DISCORD_PASSWORD
+        - name: SPOTIFY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: SPOTIFY_CLIENT_ID
+        - name: SPOTIFY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: SPOTIFY_CLIENT_SECRET
+        - name: GENIUS_ClientID
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ClientID
+        - name: GENIUS_ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ClientSecret
+        - name: GENIUS_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-bot-secrets
+              key: GENIUS_ACCESS_TOKEN
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+      imagePullSecrets:
+      - name: regcred
