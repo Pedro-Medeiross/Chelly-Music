@@ -63,5 +63,8 @@ spec:
             secretKeyRef:
               name: discord-bot-secrets
               key: GENIUS_ACCESS_TOKEN
+        resources:
+          limits:
+            memory: "512Mi"
       imagePullSecrets:
       - name: regcred
