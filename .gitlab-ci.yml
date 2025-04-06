@@ -55,10 +55,19 @@ deploy:
   script:
     - kubectl config use-context kubernetes-admin@kubernetes
     - echo "K8S_TOKEN is set? " $(if [[ -z "$K8S_TOKEN" ]]; then echo "NO"; else echo "YES"; fi)
-    - sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" k8s/deployment.yaml
-    - sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment.yaml  # Substitui a variável de commit SHA
-    - cat k8s/deployment.yaml  # Adiciona este comando para verificar a substituição
-    - kubectl apply -f k8s/deployment.yaml --namespace=my-app
+
+    # Substitui as variáveis nos arquivos de deployment 1 a 5
+    - for i in {1..5}; do
+        sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" k8s/deployment$i.yaml;
+        sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" k8s/deployment$i.yaml;
+      done
+
+    # Aplica todos os deployments
+    - for i in {1..5}; do
+        echo "Applying deployment$i.yaml";
+        cat k8s/deployment$i.yaml;
+        kubectl apply -f k8s/deployment$i.yaml --namespace=my-app;
+      done
   only:
     - music
 
