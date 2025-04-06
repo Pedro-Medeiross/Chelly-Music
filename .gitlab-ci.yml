@@ -65,20 +65,41 @@ deploy:
     - echo "DEBUG: Conteúdo da pasta k8s/"
     - ls -la k8s || echo "⚠️ Pasta 'k8s' não encontrada!"
 
-    # Mostra os arquivos ANTES do sed
-    - bash -c 'for file in k8s/*.yaml; do echo "🟡 $file:"; cat "$file"; done'
+    - |
+      echo "DEBUG: Arquivos ANTES do sed"
+      for file in k8s/*.yaml; do
+        echo "🟡 $file:"
+        cat "$file"
+      done
 
-    # Substituições
-    - bash -c 'for file in k8s/*.yaml; do echo "✏️ Atualizando $file"; sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" "$file"; sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" "$file"; done'
+    - |
+      echo "Executando substituições com sed..."
+      for file in k8s/*.yaml; do
+        echo "✏️ Atualizando $file"
+        sed -i "s|\$DOCKER_USER|${DOCKER_USER}|g" "$file"
+        sed -i "s|\$CI_COMMIT_SHA|${CI_COMMIT_SHA}|g" "$file"
+      done
 
-    # Mostra os arquivos DEPOIS do sed
-    - bash -c 'for file in k8s/*.yaml; do echo "🟢 $file:"; cat "$file"; done'
+    - |
+      echo "DEBUG: Arquivos DEPOIS do sed"
+      for file in k8s/*.yaml; do
+        echo "🟢 $file:"
+        cat "$file"
+      done
 
-    # Valida arquivos com --dry-run
-    - bash -c 'for file in k8s/*.yaml; do echo "🧪 Validando $file"; kubectl apply --dry-run=client -f "$file" || exit 1; done'
+    - |
+      echo "🔍 Validando arquivos com dry-run..."
+      for file in k8s/*.yaml; do
+        echo "🧪 Validando $file"
+        kubectl apply --dry-run=client -f "$file" || exit 1
+      done
 
-    # Aplica arquivos
-    - bash -c 'for file in k8s/*.yaml; do echo "📦 Aplicando $file"; kubectl apply -f "$file"; done'
+    - |
+      echo "🚀 Aplicando arquivos no cluster..."
+      for file in k8s/*.yaml; do
+        echo "📦 Aplicando $file"
+        kubectl apply -f "$file"
+      done
   only:
     - music
 
