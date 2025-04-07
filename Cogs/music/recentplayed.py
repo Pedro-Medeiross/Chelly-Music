@@ -75,6 +75,7 @@ class RecentPlayed(commands.Cog):
         self.bot = bot  # Reference to the main bot instance
 
     @commands.command(aliases=["history", "recent"])
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
     async def recentplayed(self, ctx):
         """
         Command to display the history of recently played tracks.

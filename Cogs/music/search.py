@@ -36,6 +36,7 @@ class Search(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['find'])
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
     async def search(self, ctx, *, query: str):
         """
         Search command:

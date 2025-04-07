@@ -171,6 +171,7 @@ class Play(commands.Cog):
             watcher.last_ctx = ctx
 
     @commands.command(aliases=['p', 'playmusic'])
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
     async def play(self, ctx, *, query: str = None):
         """
         Main command for playing music.
