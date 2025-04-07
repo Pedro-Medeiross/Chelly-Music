@@ -15,6 +15,7 @@ class Skip(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['s', 'next'])
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
     async def skip(self, ctx, index: int = 1):
         """
         Skips to a specific track in the queue or initiates a vote to skip the current track.
