@@ -36,7 +36,7 @@ class Ping(commands.Cog):
         # Edit message with calculated latency (converted to milliseconds)
         # client.latency is measured in seconds
         await response.edit(
-            content=f"The ping is {main.client.latency * 1000:.2f}ms"
+            content=f"A latência é {main.client.latency * 1000:.2f}ms"
         )
 
 def setup(client):
