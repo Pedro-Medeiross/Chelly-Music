@@ -158,8 +158,8 @@ class AddNext(commands.Cog):
                 return False
         return True
 
-    @commands.command(aliases=['addnext', 'insert', 'add_next'])
-    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
+    @commands.command(aliases=['addnext', 'insert', 'add_next'])\\\\\\
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286, 732299321965412442, 673335179275796481, 809903409385177108, 1272690192117137449)
     async def priority_queue(self, ctx, *, query):
         """
         Command to add a song with priority to the queue.

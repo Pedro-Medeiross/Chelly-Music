@@ -23,7 +23,8 @@ from embeds.music.play_embed import (
     empty_playlist_embed,
     added_playlist_tracks_embed,
     processing_spotify_playlist,
-    processing_youtube_playlist
+    processing_youtube_playlist,
+    same_voice_channel_error_embed
 )
 
 # Load environment variables from the .env file
@@ -171,7 +172,7 @@ class Play(commands.Cog):
             watcher.last_ctx = ctx
 
     @commands.command(aliases=['p', 'playmusic'])
-    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286, 732299321965412442, 673335179275796481, 809903409385177108, 1272690192117137449)
     async def play(self, ctx, *, query: str = None):
         """
         Main command for playing music.
@@ -182,6 +183,10 @@ class Play(commands.Cog):
         # Ensure the user is connected to a voice channel
         if not ctx.author.voice or not ctx.author.voice.channel:
             return await ctx.send(embed=voice_channel_error_embed())
+        
+        # Ensure the user is connected to same channel
+        if ctx.author.voice.channel != ctx.guild.voice_client.channel:
+            return await ctx.send(embed=same_voice_channel_error_embed())
 
         # If no query is provided, try to start playing the next track
         if not query:

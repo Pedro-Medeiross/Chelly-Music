@@ -103,7 +103,7 @@ class CurrentPlaying(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=["np", "nowplaying"])
-    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286)
+    @commands.has_any_role(1137297683862802503, 1335963261878665229, 1336673321223192659, 739241340189278279, 733923101506666547, 811070168163680286, 732299321965412442, 673335179275796481, 809903409385177108, 1272690192117137449)
     async def currentplaying(self, ctx):
         """
         Command to display the currently playing track.
@@ -119,7 +119,7 @@ class CurrentPlaying(commands.Cog):
         voice_client = ctx.voice_client
         
         # If no voice client is connected, or if no track is playing, send an error embed
-        if not voice_client or not voice_client.is_playing() or not voice_client.source:
+        if not voice_client or (not voice_client.is_playing() and not voice_client.is_paused()) or not voice_client.source:
             return await ctx.send(embed=no_playing_music_embed())
 
         # Get the current audio source from the voice client

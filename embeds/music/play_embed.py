@@ -42,6 +42,13 @@ def voice_channel_error_embed():
         description="Você deve estar em um canal de voz para tocar música!",
         color=disnake.Color.red()
     )
+    
+def same_voice_channel_error_embed():
+    return disnake.Embed(
+        title="❌ Canal de Voz",
+        description="Você deve estar no mesmo canal de voz para tocar música!",
+        color=disnake.Color.red()
+    )
 
 def already_connected_embed():
     return disnake.Embed(
