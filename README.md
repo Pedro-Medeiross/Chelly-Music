@@ -46,5 +46,3 @@ Esse projeto foi essencial para aprofundar meu conhecimento em:
 - Orquestração de múltiplos containers com Kubernetes
 - Estruturação de comandos em bots com Disnake
 - Tratamento de exceções e melhoria de performance em tempo real
-
----
